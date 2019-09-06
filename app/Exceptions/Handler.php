@@ -48,9 +48,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return response()->view('errors.404', ['exception' => $e]);
+        //Error custom bien feo, por ahora comentado mientras se desarrola
+        //return response()->view('errors.404', ['exception' => $e]);
          
-        /* NO BORRAR esto comentado, es la redirección de errores original
+        // NO BORRAR esto comentado, es la redirección de errores original
         if($this->isHttpException($e))
         {
             switch ($e->getStatusCode()) 
@@ -72,6 +73,6 @@ class Handler extends ExceptionHandler
         else
         {
                 return parent::render($request, $e);
-        }*/
+        }
     } 
 }

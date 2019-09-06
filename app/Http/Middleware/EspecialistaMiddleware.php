@@ -32,7 +32,7 @@ class EspecialistaMiddleware
 		Session::flash('message_icon', 'hide');
 		Session::flash('message_header', 'Failure');
 		Session::flash('info', 'Debe iniciar sesión');
-        return redirect('/login'); 
+        return redirect('/'); 
         }
         return $next($request);
     }

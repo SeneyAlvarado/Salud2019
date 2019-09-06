@@ -3,7 +3,7 @@
 
 <div class="panel panel-primary border-panel">
      <div class="panel-heading  bg-color-panel">
-        <p style="text-align: center; font-size: 3vh;">Reservar cita</p>
+        <p style="text-align: center; font-size: 1.5em;">Reservar cita</p>
     </div>
     <div class="panel-body">
 <div style="margin-bottom: 15px;" class="col-md-4"><select id="dropRecintos" class="form-control"></select></div>
@@ -12,7 +12,12 @@
 <script src="{{asset('js/pruebaCombox.js')}}"></script>
 
 <!-- sdfghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-->
-<div class="container">
+<input type="hidden"  id="CR_Date" value="{{\Carbon\Carbon::now(new \DateTimeZone('America/Costa_Rica'))}}"/>
+<input type="hidden"  id="CR_Date_formated" value="{{\Carbon\Carbon::parse(\Carbon\Carbon::now(new \DateTimeZone('America/Costa_Rica')))->format('d/m/Y')}}"/>
+
+
+<!-- This div was the calendar for the patient to pick the date
+     <div class="container">
         <div class="row">
             <div class='col-sm-3'>
                 <div class="form-group">
@@ -25,7 +30,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     
     <div style="text-align:center">
     <button id="mostar-tabla"  style="margin-left:15px;"class = 'margin-button-agregar btn btn-success mobile' 
@@ -42,7 +47,7 @@
     </div>
     @endif
     
-    <p style="display:none; margin-top:15px; text-align:center; font-size: 3vh;" id="Fecha">Hola</p>
+    <p style="display:none; margin-top:15px; text-align:center; font-size: 1.2em;" id="Fecha">Hola</p>
 
     <!--
     <a href="" style="display:none; margin-top:15px; text-align:center; font-size: 3vh;"

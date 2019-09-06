@@ -18,21 +18,21 @@ class AdminMiddleware
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-        $user = Auth::user();
-        if ($user->tipo > 1){
-        Session::flash('message_type', 'negative');
-		Session::flash('message_icon', 'hide');
-		Session::flash('message_header', 'Failure');
-		Session::flash('error', 'No tiene permiso de acceder a esa sección');
+            $user = Auth::user();
+            if ($user->tipo > 1) {
+                Session::flash('message_type', 'negative');
+                Session::flash('message_icon', 'hide');
+                Session::flash('message_header', 'Failure');
+                Session::flash('error', 'No tiene permiso de acceder a esa sección');
 
-            return redirect('/');
-        }
+                return redirect('/');
+            }
         } else {
-        Session::flash('message_type', 'negative');
-		Session::flash('message_icon', 'hide');
-		Session::flash('message_header', 'Failure');
-		Session::flash('info', 'Debe iniciar sesión');
-        return redirect('/login'); 
+            Session::flash('message_type', 'negative');
+            Session::flash('message_icon', 'hide');
+            Session::flash('message_header', 'Failure');
+            Session::flash('info', 'Debe iniciarssss sesión');
+            return redirect('/');
         }
         return $next($request);
     }

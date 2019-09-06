@@ -181,7 +181,8 @@ class CitaController extends Controller
 					$hora = $hora . ":" . $minuto . " am";
 				}
 
-		Mail::to($email)->send(new SendMailable($user->name, $fecha, $hora, $recinto, $especialista));//send appointment reservation mail
+		//MAIL COMENTADO POR AHORA PARA QUE NO SE CAIGA
+		//Mail::to($email)->send(new SendMailable($user->name, $fecha, $hora, $recinto, $especialista));//send appointment reservation mail
 		Session::flash('message_type', 'negative');
 		Session::flash('message_icon', 'hide');
 		Session::flash('message_header', 'Success');
