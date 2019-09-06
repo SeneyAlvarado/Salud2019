@@ -58,12 +58,12 @@ class Handler extends ExceptionHandler
                 {
                 // not found
                 case 404:
-                return redirect()->guest('log');
+                return redirect()->guest('/');
                 break;
 
                 // internal error
                 case 500:
-                return redirect()->guest('log');
+                return redirect()->guest('/');
                 break;
                 default:
                     return $this->renderHttpException($e);
