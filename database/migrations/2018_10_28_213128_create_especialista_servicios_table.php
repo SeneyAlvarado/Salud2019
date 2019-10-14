@@ -22,6 +22,7 @@ class CreateEspecialistaserviciosTable extends Migration {
 			
 			$table->integer('id_servicio')->unsigned();
 			$table->foreign('id_servicio')->references('id')->on('servicios')->onDelete('cascade');
+			$table->integer('max_citas_diarias');
             $table->boolean('active_flag');
         });
 

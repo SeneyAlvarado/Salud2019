@@ -154,7 +154,7 @@ Route::resource('especialista_servicios', 'Especialista_servicioController')->mi
 Route::get('eliminarVinculoEspecialista/{servicio}/{recinto}/{especialista}',
  ['as'=>'eliminarVinculoEspecialista1','uses'=>'Especialista_servicioController@eliminar'])->middleware('admin');
 
- Route::get('/vincularEspecialista/{servicio}/{recinto}/{especialista}', 
+ Route::get('/vincularEspecialista/{servicio}/{recinto}/{especialista}/{max_citas_diarias}', 
  'Especialista_servicioController@store')->middleware('admin');
 
  //sirve para traer todos los especialistas (bloqueo_esp root, master, asist)

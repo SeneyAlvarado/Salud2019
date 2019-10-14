@@ -55,7 +55,8 @@ class Especialista_servicioController extends Controller
 			'servicios.nombre as Servicio',
 			'especialistas.nombre as nombreEspecialista', 
 			'especialistas.primer_apellido_especialista as apellido1', 
-			'especialistas.segundo_apellido_especialista as apellido2')
+			'especialistas.segundo_apellido_especialista as apellido2',
+			'especialista_servicios.max_citas_diarias as max_citas_diarias')
 			->orderBy('id_recinto', 'asc')->get();
 			
 		return view('especialista_servicios.index', compact('vinculos'));
@@ -77,7 +78,7 @@ class Especialista_servicioController extends Controller
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function store(Request $request, User $user, $servicio, $recinto, $especialista)
+	public function store(Request $request, User $user, $servicio, $recinto, $especialista, $max_citas_diarias)
 	{
 
 		$sentencia = Especialista_servicio::
@@ -97,6 +98,7 @@ class Especialista_servicioController extends Controller
 								$especialista_servicio->id_servicio = $servicio;
 								$especialista_servicio->id_recinto = $recinto;
 								$especialista_servicio->id_especialista = $especialista;
+								$especialista_servicio->max_citas_diarias = $max_citas_diarias;
 								$especialista_servicio->active_flag = 1;
 								$especialista_servicio->save();
 								

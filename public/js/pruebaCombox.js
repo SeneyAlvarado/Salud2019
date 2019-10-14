@@ -162,7 +162,11 @@ function revisarDisponibilidad() {
             success: function (datos) {
                 //alert(datos + " jajaja");
                 //alert(datos.horasOcupadas);
-                cargarFechasDisponibles(datos.horasOcupadas);
+                if (datos.horasOcupadas == "-2") {//error de máximo de citas alcanzado
+                    alert("El máximo de citas para el servicio seleccionado en la fecha elegida ha sido alcanzado.");
+                } else {
+                    cargarFechasDisponibles(datos.horasOcupadas);
+                }
             }, error: function () {
                 alert("Ha habido un error verificando la existencia de citas. Si este persiste comuníquese" +
                     " con el Servicio de Salud");

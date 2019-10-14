@@ -22,6 +22,7 @@ use Auth;
 use App\Cita;
 
 use App\Dia_bloqueo_especialista;
+use App\Especialista_servicio;
 use App\Horarios_servicio;
 use App\Recinto_servicio;
 
@@ -38,254 +39,262 @@ use DateTimeZone;
 use Illuminate\Support\Facades\Crypt;
 
 
-class AjaxController extends Controller {
-   public function index(){
-      $msg = "This is a simple message.";
-      return  $msg;
-   }
+class AjaxController extends Controller
+{
+    public function index()
+    {
+        $msg = "This is a simple message.";
+        return  $msg;
+    }
 
-   /**
-    * Used after a user has created it´s account succesfully, redirects to login with message
-    *
-    * @return void
-    */
-   public function logoutMensajeRegistro () {
-    //logout user y mandar mensaje bonito :3
-    auth()->logout();
-    return redirect('login')->with('success', 'Su cuenta ha sido creada exitosamente');
-}
+    /**
+     * Used after a user has created it´s account succesfully, redirects to login with message
+     *
+     * @return void
+     */
+    public function logoutMensajeRegistro()
+    {
+        //logout user y mandar mensaje bonito :3
+        auth()->logout();
+        return redirect('login')->with('success', 'Su cuenta ha sido creada exitosamente');
+    }
 
-/**
- * Gets ACTIVE Dia_bloqueo_especialista
- * Returns json with the days
- * @return void
- */
-public function dropDiasBloqueo(){
-    /*$query=trim($request->get('searchText'));*/
-
-    $dias=Dia_bloqueo_especialista::where('active_flag', 1)->orderBy('id','asc')->get();
-
-    return json_encode(["dias"=>$dias]);
-}
-
-
-
-/**
- * Gets ACTIVE recintos order them by attribute 'descripcion'
- * Returns the recintos as JSON
- * @return void
- */
-   public function combobox(){
+    /**
+     * Gets ACTIVE Dia_bloqueo_especialista
+     * Returns json with the days
+     * @return void
+     */
+    public function dropDiasBloqueo()
+    {
         /*$query=trim($request->get('searchText'));*/
 
-        $recintos=DB::table('recintos')->where('active_flag', '=', 1)->orderBy('descripcion','desc')->get();
+        $dias = Dia_bloqueo_especialista::where('active_flag', 1)->orderBy('id', 'asc')->get();
+
+        return json_encode(["dias" => $dias]);
+    }
+
+
+
+    /**
+     * Gets ACTIVE recintos order them by attribute 'descripcion'
+     * Returns the recintos as JSON
+     * @return void
+     */
+    public function combobox()
+    {
+        /*$query=trim($request->get('searchText'));*/
+
+        $recintos = DB::table('recintos')->where('active_flag', '=', 1)->orderBy('descripcion', 'desc')->get();
         if ($recintos == null || $recintos->isEmpty()) {
             Flash::message("No hay recintos para mostrar");
         }
-        return json_encode(["recintos"=>$recintos]);
-}
+        return json_encode(["recintos" => $recintos]);
+    }
 
-/**
- * Gets all ACTIVE estado citas
- * return the estado_citas as JSON
- * @return void
- */
-public function estadosCitas(){
-    /*$query=trim($request->get('searchText'));*/
+    /**
+     * Gets all ACTIVE estado citas
+     * return the estado_citas as JSON
+     * @return void
+     */
+    public function estadosCitas()
+    {
+        /*$query=trim($request->get('searchText'));*/
 
-    $estado_citas=DB::table('estado_citas')->where('active_flag', '=', 1)->orderBy('id','asc')->get();
-    /*if ($recintos == null || $recintos->isEmpty()) {
+        $estado_citas = DB::table('estado_citas')->where('active_flag', '=', 1)->orderBy('id', 'asc')->get();
+        /*if ($recintos == null || $recintos->isEmpty()) {
         Flash::message("No hay recintos para mostrar");
     }*/
-    return json_encode(["estado_citas"=>$estado_citas]);
-}
+        return json_encode(["estado_citas" => $estado_citas]);
+    }
 
-/**
- * Gets all ACTIVE 'servicios' at the param received ACTIVE 'recinto' 
- *  Returns the result of the query as JSON
- * @param [varchar] $ID_Recinto
- * @param Request $request
- * @return void
- */
-public function comboServicios($ID_Recinto, Request $request){
-    /*$query=trim($request->get('searchText'));*/
+    /**
+     * Gets all ACTIVE 'servicios' at the param received ACTIVE 'recinto' 
+     *  Returns the result of the query as JSON
+     * @param [varchar] $ID_Recinto
+     * @param Request $request
+     * @return void
+     */
+    public function comboServicios($ID_Recinto, Request $request)
+    {
+        /*$query=trim($request->get('searchText'));*/
 
-    $servicios= Recinto_servicio::where('recinto_id', $ID_Recinto)
-    ->where('recinto_servicios.active_flag', 1)
-    ->join('servicios', 'recinto_servicios.servicio_id', '=', 'servicios.id')->
-    where('servicios.active_flag' , 1)->get();
+        $servicios = Recinto_servicio::where('recinto_id', $ID_Recinto)
+            ->where('recinto_servicios.active_flag', 1)
+            ->join('servicios', 'recinto_servicios.servicio_id', '=', 'servicios.id')->where('servicios.active_flag', 1)->get();
 
-    return ["servicios"=>$servicios];
-}
+        return ["servicios" => $servicios];
+    }
 
-/**
- * Return as JSON all ACTIVE 'especialistas'.
- *
- * @param Request $request
- * @return void
- */
-public function cargarEspecialistas(Request $request){
-    /*$query=trim($request->get('searchText'));*/
-    $especialistas= Especialista::where('active_flag', 1)->get();
+    /**
+     * Return as JSON all ACTIVE 'especialistas'.
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function cargarEspecialistas(Request $request)
+    {
+        /*$query=trim($request->get('searchText'));*/
+        $especialistas = Especialista::where('active_flag', 1)->get();
 
-    return ["especialistas"=>$especialistas];
-}
+        return ["especialistas" => $especialistas];
+    }
 
-/**
- * Return all the ACTIVE 'especialista' data, assuming the user LOGGED is one of them
- *
- * @param Request $request
- * @return void
- */
-public function cargarEspecialistaLoggeado(Request $request){
-    /*$query=trim($request->get('searchText'));*/
-    $especialistas= Especialista::where('active_flag', 1)->where('id_user', Auth::user()->id)->get();
-    return ["especialistas"=>$especialistas];
-}
+    /**
+     * Return all the ACTIVE 'especialista' data, assuming the user LOGGED is one of them
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function cargarEspecialistaLoggeado(Request $request)
+    {
+        /*$query=trim($request->get('searchText'));*/
+        $especialistas = Especialista::where('active_flag', 1)->where('id_user', Auth::user()->id)->get();
+        return ["especialistas" => $especialistas];
+    }
 
-/**
- * Return all ACTIVE 'servicios'.
- *
- * @param Request $request
- * @return void
- */
-public function cargarServicios(Request $request){
-    /*$query=trim($request->get('searchText'));*/
+    /**
+     * Return all ACTIVE 'servicios'.
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function cargarServicios(Request $request)
+    {
+        /*$query=trim($request->get('searchText'));*/
 
-    $servicios= Servicio::where('active_flag', 1)->get();
+        $servicios = Servicio::where('active_flag', 1)->get();
 
-    return ["servicios"=>$servicios];
-}
+        return ["servicios" => $servicios];
+    }
 
-/**
- * Gets all the 'especialistas' from a determined ACTIVE 'servicio'
- *
- * @param [type] $ID_Servicio
- * @param [type] $ID_Recinto 
- * @param Request $request
- * @return void
- */
-public function comboEspecialistasSinHorario($ID_Servicio, $ID_Recinto, Request $request){
+    /**
+     * Gets all the 'especialistas' from a determined ACTIVE 'servicio'
+     *
+     * @param [type] $ID_Servicio
+     * @param [type] $ID_Recinto 
+     * @param Request $request
+     * @return void
+     */
+    public function comboEspecialistasSinHorario($ID_Servicio, $ID_Recinto, Request $request)
+    {
 
-    $especialistas_servicio = Servicio::where('active_flag', 1)->where('id', $ID_Servicio)->firstOrFail()
-    ->especialistas;/*->where('servicios.active_flag', 1)->get();/*->where('id', $ID_Servicio)->
+        $especialistas_servicio = Servicio::where('active_flag', 1)->where('id', $ID_Servicio)->firstOrFail()
+            ->especialistas;/*->where('servicios.active_flag', 1)->get();/*->where('id', $ID_Servicio)->
     firstOrFail()->especialistas;/*->where('active_flag', '=', 1);//->first()*/
 
-    //return $especialistas_servicio_recinto;
-    $especialistas_return = array();
-    foreach ($especialistas_servicio as $especialista) {
-       
-                    if (isset($especialistas_return[$especialista->id])) {//verifica si el objeto existe en array
-                        // object exists in array; do something
-                    } else {
-                        $especialistas_return[$especialista->id] = $especialista;
-                        //esto inserta en el array pero con llave única
-                    }
+        //return $especialistas_servicio_recinto;
+        $especialistas_return = array();
+        foreach ($especialistas_servicio as $especialista) {
+
+            if (isset($especialistas_return[$especialista->id])) { //verifica si el objeto existe en array
+                // object exists in array; do something
+            } else {
+                $especialistas_return[$especialista->id] = $especialista;
+                //esto inserta en el array pero con llave única
             }
-    return ["especialistas"=> $especialistas_return];
-}
+        }
+        return ["especialistas" => $especialistas_return];
+    }
 
-/**
- * Return all the ACTIVE 'especialista' that has 'horararios' in a determined 'servicio' and 'recinto'
- *
- * @param [type] $ID_Servicio
- * @param [type] $ID_Recinto
- * @param Request $request
- * @return void
- */
-public function comboEspecialistas($ID_Servicio, $ID_Recinto, Request $request){
+    /**
+     * Return all the ACTIVE 'especialista' that has 'horararios' in a determined 'servicio' and 'recinto'
+     *
+     * @param [type] $ID_Servicio
+     * @param [type] $ID_Recinto
+     * @param Request $request
+     * @return void
+     */
+    public function comboEspecialistas($ID_Servicio, $ID_Recinto, Request $request)
+    {
 
-    // return ["especialistas"=> Servicio::findOrFail($ID_Servicio)->especialistas->where('active_flag', '=', 1)];
-    $especialistas_servicio = Servicio::where('active_flag', 1)->where('id', $ID_Servicio)->
-    firstOrFail()->especialistas->where('active_flag', '=', 1);//->first()
-    //->especialistas->where('active_flag', '=', 1);
-    //return ["especialistas"=> $especialistas_servicio];
+        // return ["especialistas"=> Servicio::findOrFail($ID_Servicio)->especialistas->where('active_flag', '=', 1)];
+        $especialistas_servicio = Servicio::where('active_flag', 1)->where('id', $ID_Servicio)->firstOrFail()->especialistas->where('active_flag', '=', 1); //->first()
+        //->especialistas->where('active_flag', '=', 1);
+        //return ["especialistas"=> $especialistas_servicio];
 
-    $especialistas_return = array();
-    foreach ($especialistas_servicio as $especialista) {
-       
-        $horario_servicio_esp = $especialista->horarios_servicios->where
-        ('active_flag', '=', 1)->where('id_servicio' , $ID_Servicio);
-        
-        //return ["especialistas"=> $horario_servicio_esp];
+        $especialistas_return = array();
+        foreach ($especialistas_servicio as $especialista) {
 
-        if(!$horario_servicio_esp->isEmpty()) {
+            $horario_servicio_esp = $especialista->horarios_servicios->where('active_flag', '=', 1)->where('id_servicio', $ID_Servicio);
 
-            foreach ($horario_servicio_esp as $horario) {
-                
-                if(!empty($horario)) {
-                   if($horario->id_recinto == $ID_Recinto) {
-                    if (isset($especialistas_return[$especialista->id])) {//verifica si el objeto existe en array
-                        // object exists in array; do something
-                    } else {
-                        $especialistas_return[$especialista->id] = $especialista;
-                        //esto inserta en el array pero con llave única
-                    }
-                    
+            //return ["especialistas"=> $horario_servicio_esp];
+
+            if (!$horario_servicio_esp->isEmpty()) {
+
+                foreach ($horario_servicio_esp as $horario) {
+
+                    if (!empty($horario)) {
+                        if ($horario->id_recinto == $ID_Recinto) {
+                            if (isset($especialistas_return[$especialista->id])) { //verifica si el objeto existe en array
+                                // object exists in array; do something
+                            } else {
+                                $especialistas_return[$especialista->id] = $especialista;
+                                //esto inserta en el array pero con llave única
+                            }
+                        }
                     }
                 }
             }
         }
+        return ["especialistas" => $especialistas_return];
     }
-    return ["especialistas"=> $especialistas_return];
-}
 
-/**
- * Used to suggest dates for appointments.  
- * Returns JSON array with the suggested dates.
- * @param [type] $dropRecintos 'Recinto' for the appointment
- * @param [type] $dropServicios 'Servicio' fot the appointment
- * @param [type] $dropEspecialista 'Especialista' for the appointment.
- * @return void
- */
-public function datosSugerirCita($dropRecintos, $dropServicios, $dropEspecialista){
+    /**
+     * Used to suggest dates for appointments.  
+     * Returns JSON array with the suggested dates.
+     * @param [type] $dropRecintos 'Recinto' for the appointment
+     * @param [type] $dropServicios 'Servicio' fot the appointment
+     * @param [type] $dropEspecialista 'Especialista' for the appointment.
+     * @return void
+     */
+    public function datosSugerirCita($dropRecintos, $dropServicios, $dropEspecialista)
+    {
 
-    
-    $date =  Carbon::now(new DateTimeZone('America/Costa_Rica'));
-    $end_date = Carbon::now(new DateTimeZone('America/Costa_Rica'))->addDay(7);
-    
-    $auxDate = $date;
-    $cantidadCitasDisp = 0;
-    $cantidadTotalCitas = 24;
-    $maxCitasSugerir = 10;
-    $disponibles = array();
-    $a = array();
 
-	while ($end_date->greaterThanOrEqualTo($date)) {
-
-       if(!$date->isWeekend()) {
-        $arrayxD = json_decode($this->datosCita($dropRecintos, $dropServicios, $dropEspecialista, $date), true);
-        
-        foreach ($arrayxD as $elemento) {
-            
-            $cantidadBloqueadas = count($elemento);
-            if($cantidadBloqueadas < $cantidadTotalCitas) {//Si la cantidad de blpqueadas es menor a 24
-                $cantidadCitasDisp += ($cantidadTotalCitas - $cantidadBloqueadas);
-                array_push($disponibles, $auxDate->format('d/m/Y'));
-                    if($cantidadCitasDisp >= $maxCitasSugerir) {
-                        break;
-                    }
-            }
-            
-            //array_push($a, $arrayxD);
-            
-            
-        }
-
-        if($cantidadCitasDisp >= $maxCitasSugerir) {
-            break;
-        }
+        $date =  Carbon::now(new DateTimeZone('America/Costa_Rica'));
+        $end_date = Carbon::now(new DateTimeZone('America/Costa_Rica'))->addDay(7);
 
         $auxDate = $date;
+        $cantidadCitasDisp = 0;
+        $cantidadTotalCitas = 24;
+        $maxCitasSugerir = 10;
+        $disponibles = array();
+        $a = array();
+
+        while ($end_date->greaterThanOrEqualTo($date)) {
+
+            if (!$date->isWeekend()) {
+                $arrayxD = json_decode($this->datosCita($dropRecintos, $dropServicios, $dropEspecialista, $date), true);
+
+                foreach ($arrayxD as $elemento) {
+
+                    $cantidadBloqueadas = count($elemento);
+                    if ($cantidadBloqueadas < $cantidadTotalCitas) { //Si la cantidad de blpqueadas es menor a 24
+                        $cantidadCitasDisp += ($cantidadTotalCitas - $cantidadBloqueadas);
+                        array_push($disponibles, $auxDate->format('d/m/Y'));
+                        if ($cantidadCitasDisp >= $maxCitasSugerir) {
+                            break;
+                        }
+                    }
+
+                    //array_push($a, $arrayxD);
+
+
+                }
+
+                if ($cantidadCitasDisp >= $maxCitasSugerir) {
+                    break;
+                }
+
+                $auxDate = $date;
+            }
+
+            $date = $date->addDay();
         }
-        
-        $date = $date->addDay();
+        return json_encode(["disponibles" => $disponibles]);
     }
-    return json_encode(["disponibles"=>$disponibles]);
 
-}
-
-/*
+    /*
 private function horasLibres($arrayOcupadas) {
 
 
@@ -312,116 +321,137 @@ private function horasLibres($arrayOcupadas) {
     return $horas;
 }*/
 
-/**
- * Used to get the ocuuppied time for appointments at the 'especialista', 'recinto' and 'servicio'
- * the user picked to check if there´s an appointment available. 
- * Returns JSON with the possible time that an appointment CAN´T be scheduled.
- * @param [type] $dropRecintos The 'recinto' the user picked
- * @param [type] $dropServicios The 'Servicio' the user picked
- * @param [type] $dropEspecialistaxD The 'Especialista' the user picked
- * @param [type] $datepicked The date the user picked.
- * @return void
- */
-public function datosCita($dropRecintos, $dropServicios, $dropEspecialistaxD, $datepicked){
+    /**
+     * Used to get the ocuuppied time for appointments at the 'especialista', 'recinto' and 'servicio'
+     * the user picked to check if there´s an appointment available. 
+     * Returns JSON with the possible time that an appointment CAN´T be scheduled.
+     * @param [type] $dropRecintos The 'recinto' the user picked
+     * @param [type] $dropServicios The 'Servicio' the user picked
+     * @param [type] $dropEspecialistaxD The 'Especialista' the user picked
+     * @param [type] $datepicked The date the user picked.
+     * @return void
+     */
+    public function datosCita($dropRecintos, $dropServicios, $dropEspecialistaxD, $datepicked)
+    {
+        $dropEspecialistas = $dropEspecialistaxD;
 
-    
         $horasOcupadas = array();
 
-        $dropEspecialistas = $dropEspecialistaxD;
-    
-        $fechaElegidaCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($datepicked)->format('Y-m-d'), 
-        'America/Costa_Rica');//hace un string de la fecha elegida por el usuario y luego lo hace un Carbon*/
-      
+        $fechaElegidaCarbon = Carbon::createFromFormat(
+            'Y-m-d',
+            Carbon::parse($datepicked)->format('Y-m-d'),
+            'America/Costa_Rica'
+        ); //hace un string de la fecha elegida por el usuario y luego lo hace un Carbon*/
+
+        $vinculo_esp_serv = Especialista_servicio::where('id_servicio', $dropServicios)
+            ->where('id_especialista', $dropEspecialistas)->where('id_recinto', $dropRecintos)
+            ->where('active_flag', '1')->first();
+
+        if ($vinculo_esp_serv->max_citas_diarias != 0) {
+
+            $cantidad_citas = Cita::where('estado_cita_id', '!=', 3)->where('estado_cita_id', '!=', 4)->where('servicio_id', $dropServicios)
+                ->where('especialista_id', $dropEspecialistas)->where('recinto_id', $dropRecintos)->whereDate('fecha_cita', $fechaElegidaCarbon->toDateString())
+                ->get(); //citas en la fecha elegida
+
+            if ($vinculo_esp_serv->max_citas_diarias <= count($cantidad_citas)) {
+                return json_encode(["horasOcupadas" => "-2"]);
+            }
+        }
+
         $fechaHoy =  Carbon::now(new DateTimeZone('America/Costa_Rica'));
 
         //return json_encode(["horasOcupadas"=>$fechaHoy->toDateString() == $fechaElegidaCarbon->toDateString()]);
-        if($fechaHoy->toDateString() == $fechaElegidaCarbon->toDateString()) {
+        if ($fechaHoy->toDateString() == $fechaElegidaCarbon->toDateString()) {
             $horaHoy = intval($fechaHoy->hour);
             $minutosHoy = intval($fechaHoy->minute);
             //$sinCitasHoy = false;
-            if((intval($horaHoy) >= 17)){//si por ejemplo son las 22:15 lo vuelve 16:40 
+            if ((intval($horaHoy) >= 17)) { //si por ejemplo son las 22:15 lo vuelve 16:40 
                 $horaHoy = "16";
                 $minutosHoy = "40";
-            } 
-            if(!(intval($horaHoy) < 8)) {//si la hora NO es menor a las 8. Si es menor nada se hace
-            if(($minutosHoy - 20) < 0) {//13:18 = 18 - 20 -> 13:00 para atrás bloqueado
-                $minutosHoy = "00";
-            } elseif(($minutosHoy - 20) == 0) {//13:20 = 20 - 20 -> 13:20 para atrás bloqueado
-                $minutosHoy = "20";
-            } elseif(($minutosHoy - 20) < 20) {//13:25 = 25 - 20 -> 13:20 para atrás bloqueado
-                    $minutosHoy = "20";
-            } elseif(($minutosHoy - 20) == 20) {//13:40 = 40 - 20 -> 13:40 para atrás bloqueado
-                    $minutosHoy = "40";
-            } else {//13:45 = 45 - 20 -> 13:40 para trás bloqueado
-                    $minutosHoy = "40";
             }
-           //return intval($horaHoy . $minutosHoy);
-           $horaFinBloqueo = intval($horaHoy . $minutosHoy);
-           $restarHora = false;
-           //return $horaFinBloqueo;
-           for($x = $horaFinBloqueo; $x >= 800; $x= $x-20) {
-            
-            $minutosCiclo = substr($x, -2);
-
-               if($horaHoy == 12){
-                   $horaHoy = 11;
-               }
-                if($minutosCiclo >= 00 && $minutosCiclo < 60){
-                    if($minutosCiclo == 00){
-                        $restarHora = true;
-                    }
-                array_push($horasOcupadas, $horaHoy . ':' . $minutosCiclo);
+            if (!(intval($horaHoy) < 8)) { //si la hora NO es menor a las 8. Si es menor nada se hace
+                if (($minutosHoy - 20) < 0) { //13:18 = 18 - 20 -> 13:00 para atrás bloqueado
+                    $minutosHoy = "00";
+                } elseif (($minutosHoy - 20) == 0) { //13:20 = 20 - 20 -> 13:20 para atrás bloqueado
+                    $minutosHoy = "20";
+                } elseif (($minutosHoy - 20) < 20) { //13:25 = 25 - 20 -> 13:20 para atrás bloqueado
+                    $minutosHoy = "20";
+                } elseif (($minutosHoy - 20) == 20) { //13:40 = 40 - 20 -> 13:40 para atrás bloqueado
+                    $minutosHoy = "40";
+                } else { //13:45 = 45 - 20 -> 13:40 para trás bloqueado
+                    $minutosHoy = "40";
                 }
-                /*if($minutosCiclo >= 60){
+                //return intval($horaHoy . $minutosHoy);
+                $horaFinBloqueo = intval($horaHoy . $minutosHoy);
+                $restarHora = false;
+                //return $horaFinBloqueo;
+                for ($x = $horaFinBloqueo; $x >= 800; $x = $x - 20) {
+
+                    $minutosCiclo = substr($x, -2);
+
+                    if ($horaHoy == 12) {
+                        $horaHoy = 11;
+                    }
+                    if ($minutosCiclo >= 00 && $minutosCiclo < 60) {
+                        if ($minutosCiclo == 00) {
+                            $restarHora = true;
+                        }
+                        array_push($horasOcupadas, $horaHoy . ':' . $minutosCiclo);
+                    }
+                    /*if($minutosCiclo >= 60){
                     $restarHora = true;
                 }*/
-                if($restarHora){
-                    $horaHoy = intval($horaHoy) - 1;
-                    $minutosCiclo = "40";
-                    $restarHora = false;
-                    
-                    if($horaHoy < 8) {
-                        break;
+                    if ($restarHora) {
+                        $horaHoy = intval($horaHoy) - 1;
+                        $minutosCiclo = "40";
+                        $restarHora = false;
+
+                        if ($horaHoy < 8) {
+                            break;
+                        }
                     }
-                }
-           }//fin for
-          }//fin if menor a 8
-          //return json_encode(["horasOcupadas"=>$horasOcupadas]);
-        }//fin si el dia es hoy
+                } //fin for
+            } //fin if menor a 8
+            //return json_encode(["horasOcupadas"=>$horasOcupadas]);
+        } //fin si el dia es hoy
 
         $diaElegido = $fechaElegidaCarbon->dayOfWeek;
         $diaElegido2 = $fechaElegidaCarbon->dayOfWeek;
 
-                switch ($diaElegido) {
-                    case 1:
-                    $diaElegido = "LUNES";
-                        break;
-                    case 2:
-                    $diaElegido = "MARTES";
-                        break;
-                    case 3:
-                    $diaElegido = "MIéRCOLES";//no tocar, dejar la 'é'
-                        break;
-                    case 4:
-                    $diaElegido = "JUEVES";
-                        break;
-                    case 5:
-                    $diaElegido = "VIERNES";
-                        break;
-                    default:
-                    abort(404, 'Día de la semana no válido. La oficina ofrece citas de Lunes a Viernes');
-                }
+        switch ($diaElegido) {
+            case 1:
+                $diaElegido = "LUNES";
+                break;
+            case 2:
+                $diaElegido = "MARTES";
+                break;
+            case 3:
+                $diaElegido = "MIéRCOLES"; //no tocar, dejar la 'é'
+                break;
+            case 4:
+                $diaElegido = "JUEVES";
+                break;
+            case 5:
+                $diaElegido = "VIERNES";
+                break;
+            default:
+                abort(404, 'Día de la semana no válido. La oficina ofrece citas de Lunes a Viernes');
+        }
 
 
-        $horas_manana = array("8:00", "8:20", "8:40", "9:00", "9:20", "9:40", "10:00", 
-        "10:20", "10:40", "11:00", "11:20", "11:40");
+        $horas_manana = array(
+            "8:00", "8:20", "8:40", "9:00", "9:20", "9:40", "10:00",
+            "10:20", "10:40", "11:00", "11:20", "11:40"
+        );
 
-        $horas_tarde = array("13:00", "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", 
-        "15:20", "15:40", "16:00", "16:20", "16:40");
+        $horas_tarde = array(
+            "13:00", "13:20", "13:40", "14:00", "14:20", "14:40", "15:00",
+            "15:20", "15:40", "16:00", "16:20", "16:40"
+        );
 
-        $fechaCitas = Cita::where('estado_cita_id', '!=', 3)->where('estado_cita_id', '!=', 4)->where('servicio_id' , $dropServicios)
-        ->where('especialista_id', $dropEspecialistas)->where('recinto_id', $dropRecintos)->whereDate('fecha_cita', $fechaElegidaCarbon->toDateString())
-        ->get();//citas en la fecha elegida
+        $fechaCitas = Cita::where('estado_cita_id', '!=', 3)->where('estado_cita_id', '!=', 4)->where('servicio_id', $dropServicios)
+            ->where('especialista_id', $dropEspecialistas)->where('recinto_id', $dropRecintos)->whereDate('fecha_cita', $fechaElegidaCarbon->toDateString())
+            ->get(); //citas en la fecha elegida
 
         //return $fechaCitas;
         //para comparara en whereDate() se le manda el atributo de BD y un string.
@@ -433,20 +463,20 @@ public function datosCita($dropRecintos, $dropServicios, $dropEspecialistaxD, $d
         $horarios_bloqueados_esp = EspecialistaModel::findOrFail($dropEspecialistas)->bloqueo_horario->where('active_flag', 1);
 
         $horarios_servicios_especialista = Horarios_servicio::where('id_especialista', $dropEspecialistas)->where('id_servicio', $dropServicios)
-        ->where('id_recinto', $dropRecintos)->where('active_flag', 1)->get();
+            ->where('id_recinto', $dropRecintos)->where('active_flag', 1)->get();
 
         //rango de fechas bloqueando un día en específico, como los miércoles en la mañana.
 
         //return $horarios_bloqueados_esp;
 
-        if(!$fechaCitas->isEmpty()) {//citas existentes de la fecha elegidas
+        if (!$fechaCitas->isEmpty()) { //citas existentes de la fecha elegidas
             foreach ($fechaCitas as $fechaCita) {
-                $cualquiera=  Carbon::parse($fechaCita->fecha_cita)->format('H:i');
-                if(substr($cualquiera, 0,1) == "0"){
+                $cualquiera =  Carbon::parse($fechaCita->fecha_cita)->format('H:i');
+                if (substr($cualquiera, 0, 1) == "0") {
                     array_push($horasOcupadas, substr($cualquiera, 1));
                 } else {
-                array_push($horasOcupadas, $cualquiera);
-            }
+                    array_push($horasOcupadas, $cualquiera);
+                }
             }
         }
 
@@ -455,23 +485,23 @@ public function datosCita($dropRecintos, $dropServicios, $dropEspecialistaxD, $d
 
         //return json_encode(["horasOcupadas"=>$horasOcupadas]);
 
-        if(!$horarios_deshabilitados_esp->isEmpty()) {//fecha/hora deshabilitada por el especialista reuniones etc
+        if (!$horarios_deshabilitados_esp->isEmpty()) { //fecha/hora deshabilitada por el especialista reuniones etc
             foreach ($horarios_deshabilitados_esp as $deshabilitado_esp) {
-                
+
                 $fechaInicioCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($deshabilitado_esp->fecha_inicio_deshabilitar)
-                ->format('Y-m-d'), 'America/Costa_Rica')->startOfDay();
+                    ->format('Y-m-d'), 'America/Costa_Rica')->startOfDay();
 
                 $fechaFinCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($deshabilitado_esp->fecha_fin_deshabilitar)
-                ->format('Y-m-d'), 'America/Costa_Rica')->endOfDay();
-                
-                if($fechaElegidaCarbon->greaterThanOrEqualTo($fechaInicioCarbon) && $fechaElegidaCarbon->lessThanOrEqualTo($fechaFinCarbon)) {
+                    ->format('Y-m-d'), 'America/Costa_Rica')->endOfDay();
+
+                if ($fechaElegidaCarbon->greaterThanOrEqualTo($fechaInicioCarbon) && $fechaElegidaCarbon->lessThanOrEqualTo($fechaFinCarbon)) {
                     $hora_inicio_deshabilitar = $this->arreglarHora(substr($deshabilitado_esp->hora_inicio_deshabilitar, 0, 5));
                     $hora_fin_deshabilitar = $this->arreglarHora(substr($deshabilitado_esp->hora_fin_deshabilitar, 0, 5));
 
 
                     //$a = $hora_inicio_deshabilitar . ' hasta las ' . $hora_fin_deshabilitar;
                     //return json_encode(["horasOcupadas"=>$a]);
-                    if(!($hora_inicio_deshabilitar == $hora_fin_deshabilitar)){
+                    if (!($hora_inicio_deshabilitar == $hora_fin_deshabilitar)) {
                         $this->llenarArrayhoras($horasOcupadas, $hora_inicio_deshabilitar, $hora_fin_deshabilitar);
                     } else {
                         array_push($horasOcupadas, $hora_inicio_deshabilitar);
@@ -479,76 +509,75 @@ public function datosCita($dropRecintos, $dropServicios, $dropEspecialistaxD, $d
                     //return json_encode(["horasOcupadas"=>$horasOcupadas]);
                 }
             }
-        }// fin revisar horario_deshabilitado por reuniones
+        } // fin revisar horario_deshabilitado por reuniones
 
-        if(!$horarios_servicios_especialista->isEmpty()) {//citas existentes de la fecha elegidas
+        if (!$horarios_servicios_especialista->isEmpty()) { //citas existentes de la fecha elegidas
             foreach ($horarios_servicios_especialista as $horarios_servicio) {
-                if($horarios_servicio->disponibilidad_manana == 0) {
+                if ($horarios_servicio->disponibilidad_manana == 0) {
                     foreach ($horas_manana as $hora) {
-                        if($diaElegido2 == $horarios_servicio->id_dia) {
+                        if ($diaElegido2 == $horarios_servicio->id_dia) {
                             array_push($horasOcupadas, $hora);
                         }
                     }
                 }
-                if($horarios_servicio->disponibilidad_tarde == 0) {
+                if ($horarios_servicio->disponibilidad_tarde == 0) {
                     foreach ($horas_tarde as $hora) {
-                        if($diaElegido2 == $horarios_servicio->id_dia) {
+                        if ($diaElegido2 == $horarios_servicio->id_dia) {
                             array_push($horasOcupadas, $hora);
                         }
                     }
                 }
-                
             }
         }
 
-        if(!$horarios_bloqueados_esp->isEmpty()) {//fecha/hora deshabilitada por el especialista por miércoles administrativo etc
+        if (!$horarios_bloqueados_esp->isEmpty()) { //fecha/hora deshabilitada por el especialista por miércoles administrativo etc
 
             foreach ($horarios_bloqueados_esp as $bloqueado_esp) {
-                
+
                 /*Servicio::where('active_flag', 1)->where('id', $ID_Servicio)->firstOrFail()->especialistas->where('active_flag', '=', 1)*/
                 $diaBloqueado = Dia_bloqueo_especialista::findOrFail($bloqueado_esp->id_dia_bloqueo_especialistas);
                 //return $diaBloqueado;
                 $diaBloqueado = strtoupper($diaBloqueado->dia);
-                if($diaBloqueado == "MIÉRCOLES" || $diaBloqueado == "MIERCOLES") {
+                if ($diaBloqueado == "MIÉRCOLES" || $diaBloqueado == "MIERCOLES") {
                     $diaBloqueado = "MIéRCOLES";
                 }
                 //return $diaBloqueado;
-                if($diaBloqueado == $diaElegido) {
+                if ($diaBloqueado == $diaElegido) {
 
-                $fechaInicioCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($bloqueado_esp->fecha_inicio_bloqueo_especialista)
-                ->format('Y-m-d'), 'America/Costa_Rica')->startOfDay();
+                    $fechaInicioCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($bloqueado_esp->fecha_inicio_bloqueo_especialista)
+                        ->format('Y-m-d'), 'America/Costa_Rica')->startOfDay();
 
-                $fechaFinCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($bloqueado_esp->fecha_fin_bloqueo_especialista)
-                ->format('Y-m-d'), 'America/Costa_Rica')->endOfDay();
+                    $fechaFinCarbon = Carbon::createFromFormat('Y-m-d', Carbon::parse($bloqueado_esp->fecha_fin_bloqueo_especialista)
+                        ->format('Y-m-d'), 'America/Costa_Rica')->endOfDay();
 
-                //return $fechaInicioCarbon . ' ' .$fechaFinCarbon;
-                
+                    //return $fechaInicioCarbon . ' ' .$fechaFinCarbon;
+
                     //return json_encode($fechaElegidaCarbon->greaterThanOrEqualTo($fechaFinCarbon));
 
-                if($fechaElegidaCarbon->greaterThanOrEqualTo($fechaInicioCarbon) && $fechaElegidaCarbon->lessThanOrEqualTo($fechaFinCarbon)) {
-                    $hora_inicio_deshabilitar = $this->arreglarHora(substr($bloqueado_esp->hora_inicio_bloqueo_especialista, 0, 5));
-                    $hora_fin_deshabilitar = $this->arreglarHora(substr($bloqueado_esp->hora_fin_bloqueo_especialista, 0, 5));
+                    if ($fechaElegidaCarbon->greaterThanOrEqualTo($fechaInicioCarbon) && $fechaElegidaCarbon->lessThanOrEqualTo($fechaFinCarbon)) {
+                        $hora_inicio_deshabilitar = $this->arreglarHora(substr($bloqueado_esp->hora_inicio_bloqueo_especialista, 0, 5));
+                        $hora_fin_deshabilitar = $this->arreglarHora(substr($bloqueado_esp->hora_fin_bloqueo_especialista, 0, 5));
 
 
-                    //$a = $hora_inicio_deshabilitar . ' hasta las ' . $hora_fin_deshabilitar;
-                    //return json_encode(["horasOcupadas"=>$a]);
-                    if(!($hora_inicio_deshabilitar == $hora_fin_deshabilitar)){
-                    $this->llenarArrayhoras($horasOcupadas, $hora_inicio_deshabilitar, $hora_fin_deshabilitar);
+                        //$a = $hora_inicio_deshabilitar . ' hasta las ' . $hora_fin_deshabilitar;
+                        //return json_encode(["horasOcupadas"=>$a]);
+                        if (!($hora_inicio_deshabilitar == $hora_fin_deshabilitar)) {
+                            $this->llenarArrayhoras($horasOcupadas, $hora_inicio_deshabilitar, $hora_fin_deshabilitar);
                         } else {
                             array_push($horasOcupadas, $hora_inicio_deshabilitar);
                         }
-                }
+                    }
                 }
             }
             //return json_encode(["horasOcupadas"=>$horasOcupadas]);
-        }// fin revisar horario_deshabilitado por reuniones
+        } // fin revisar horario_deshabilitado por reuniones
 
         $horasOcupadas = array_unique($horasOcupadas);
-    return json_encode(["horasOcupadas"=>$horasOcupadas]);
-   // }
-}
+        return json_encode(["horasOcupadas" => $horasOcupadas]);
+        // }
+    }
 
-/*
+    /*
 private function diferenciaMenorIgual40Minutos(&$array, $horaInicio, $horaFin) {
 
     $ultimos_digitos_hora_inicio  = intval(substr($horaInicio, -2));
@@ -565,40 +594,39 @@ private function diferenciaMenorIgual40Minutos(&$array, $horaInicio, $horaFin) {
 
 }*/
 
-/**
- * private method used to give format to the date
- *
- * @param [type] $hora The hour that will receive format change
- * @return void
- */
-private function arreglarHora($hora) {
+    /**
+     * private method used to give format to the date
+     *
+     * @param [type] $hora The hour that will receive format change
+     * @return void
+     */
+    private function arreglarHora($hora)
+    {
 
-    $ultimos_digitos_hora  = substr($hora, -2);
+        $ultimos_digitos_hora  = substr($hora, -2);
 
-    if($ultimos_digitos_hora != 00 && $ultimos_digitos_hora != 20 && $ultimos_digitos_hora != 40) {
+        if ($ultimos_digitos_hora != 00 && $ultimos_digitos_hora != 20 && $ultimos_digitos_hora != 40) {
 
-    if($ultimos_digitos_hora < 20) {
-        $nuevosMins = "20";
-        $nuevaHora = strtotime(substr($hora, 0, 3) . $nuevosMins);
-        $date = date('H:i' , $nuevaHora);
-        return $date;
+            if ($ultimos_digitos_hora < 20) {
+                $nuevosMins = "20";
+                $nuevaHora = strtotime(substr($hora, 0, 3) . $nuevosMins);
+                $date = date('H:i', $nuevaHora);
+                return $date;
+            } elseif ($ultimos_digitos_hora < 40) {
+                $nuevosMins = "40";
+                $nuevaHora = strtotime(substr($hora, 0, 3) . $nuevosMins);
+                $date = date('H:i', $nuevaHora);
+                return $date;
+            } elseif ($ultimos_digitos_hora > 40) {
+                $nuevaHora = strtotime(substr($hora, 0, 3) . "00") + 60 * 60;
+                $date = date('H:i', $nuevaHora);
+                return $date;
+            }
+        } else {
+            return $hora;
+        }
 
-    } elseif ($ultimos_digitos_hora < 40) {
-        $nuevosMins = "40";
-        $nuevaHora = strtotime(substr($hora, 0, 3) . $nuevosMins);
-        $date = date('H:i' , $nuevaHora);
-        return $date;
-
-    } elseif ($ultimos_digitos_hora > 40) {
-        $nuevaHora = strtotime(substr($hora, 0, 3) . "00") + 60*60;
-        $date = date('H:i' , $nuevaHora);
-        return $date;
-    }
-} else {
-    return $hora;
-}
-
-   /* $ultimos_digitos_hora  = substr($hora, -2);
+        /* $ultimos_digitos_hora  = substr($hora, -2);
 
     if(substr($ultimos_digitos_hora, -1) != "0") { //Obliga los minutos a terminar en 0 
     $ultimos_digitos_hora  = substr($ultimos_digitos_hora, 1) . "0";
@@ -626,171 +654,176 @@ private function arreglarHora($hora) {
         $horaReturn = $primeros_dos_digitos . ':' . $ultimos_digitos_correctos;
         return $horaReturn;
     }*/
-}
-
-/**
- * Private  method that fills an array from the start hour received
- * to the final hour received, doing a +20 (every 20 minutes)
- *
- * @param [type] $array The array to be filled (by value)
- * @param [type] $horaInicio The start hour
- * @param [type] $horaFin The end hour
- * @return void
- */
-private function llenarArrayhoras(&$array, $horaInicio, $horaFin) {
-    //$x = "";
-
-    //return substr($horaInicio, 0, 1);   
-
-    $terminaExacto = false;
-
-    if(substr($horaInicio, 0, 1) == 0) {
-        $horaInicio = substr($horaInicio, 1);
-    }
-    if(substr($horaFin, 0, 1) == 0) {
-        $horaFin = substr($horaFin, 1);
-    }
-    $horaInicio = str_replace(':', '', $horaInicio);
-    $horaFin = str_replace(':', '', $horaFin);
-
-    
-    if(substr($horaFin, -2) == "00") {//si la hora termina en 00 había un error, este if la corrije
-        $terminaExacto = true;
-        $auxInicioDeHoraFin = intval(substr($horaFin, 0, 2)) - 1;
-        $horaFin = $auxInicioDeHoraFin . "40";
-    }
-    //return $horaInicio .' '  . $horaFin;
-
-    $horaFin = intval($horaFin);
-    $i = intval($horaInicio);
-
-    if($i < 800) {
-        $i = 800; 
     }
 
-    if($horaFin > 1700) {
-        $horaFin = 1700; 
-    }
+    /**
+     * Private  method that fills an array from the start hour received
+     * to the final hour received, doing a +20 (every 20 minutes)
+     *
+     * @param [type] $array The array to be filled (by value)
+     * @param [type] $horaInicio The start hour
+     * @param [type] $horaFin The end hour
+     * @return void
+     */
+    private function llenarArrayhoras(&$array, $horaInicio, $horaFin)
+    {
+        //$x = "";
 
-    for($i; $i <= intval($horaFin); $i= $i + 20) {
+        //return substr($horaInicio, 0, 1);   
 
-        if(substr($i, 1) == "60" || substr($i, 2) == "60") {
-        $i = $i + 40;
+        $terminaExacto = false;
+
+        if (substr($horaInicio, 0, 1) == 0) {
+            $horaInicio = substr($horaInicio, 1);
         }
-        if($i != 1200 && $i != 1220 && $i != 1240) {//horas de almuerzo
-        if(strlen($i) == 3) {//si es una hora de 3 dígitos como 8:00
-            $varInsert = substr_replace($i, ":" ,1,2) . substr($i, 1);
-            //reemplazar aquí para poner los ":"
+        if (substr($horaFin, 0, 1) == 0) {
+            $horaFin = substr($horaFin, 1);
         }
-        if(strlen($i) == 4) {//si es una hora de 4 dígitos como 13:00
-            $varInsert = substr_replace($i, ":" ,2,2) . substr($i, 2);
+        $horaInicio = str_replace(':', '', $horaInicio);
+        $horaFin = str_replace(':', '', $horaFin);
+
+
+        if (substr($horaFin, -2) == "00") { //si la hora termina en 00 había un error, este if la corrije
+            $terminaExacto = true;
+            $auxInicioDeHoraFin = intval(substr($horaFin, 0, 2)) - 1;
+            $horaFin = $auxInicioDeHoraFin . "40";
         }
-        array_push($array, $varInsert);
-        //$x = $x . ' ' . $varInsert;
+        //return $horaInicio .' '  . $horaFin;
+
+        $horaFin = intval($horaFin);
+        $i = intval($horaInicio);
+
+        if ($i < 800) {
+            $i = 800;
+        }
+
+        if ($horaFin > 1700) {
+            $horaFin = 1700;
+        }
+
+        for ($i; $i <= intval($horaFin); $i = $i + 20) {
+
+            if (substr($i, 1) == "60" || substr($i, 2) == "60") {
+                $i = $i + 40;
+            }
+            if ($i != 1200 && $i != 1220 && $i != 1240) { //horas de almuerzo
+                if (strlen($i) == 3) { //si es una hora de 3 dígitos como 8:00
+                    $varInsert = substr_replace($i, ":", 1, 2) . substr($i, 1);
+                    //reemplazar aquí para poner los ":"
+                }
+                if (strlen($i) == 4) { //si es una hora de 4 dígitos como 13:00
+                    $varInsert = substr_replace($i, ":", 2, 2) . substr($i, 2);
+                }
+                array_push($array, $varInsert);
+                //$x = $x . ' ' . $varInsert;
+            }
+            //////////AQUÍ ORIGINALMENTE NO VA EL IF de +20, LO PUSE DE PRUEBA ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if ((($i + 20) >=  intval($horaFin)) && !$terminaExacto) {
+                break;
+            }
+            //////////////////////////FIN IF PRUEBA //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
+        //return $x;
     }
-        //////////AQUÍ ORIGINALMENTE NO VA EL IF de +20, LO PUSE DE PRUEBA ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if((($i + 20) >=  intval($horaFin)) && !$terminaExacto) {
-            break;
+
+
+    /**
+     * Gets the 'horario_servicio' from a chosen 'recinto', 'especialista' and 'servicio', to know if 
+     * the specialist has a horary for the determined service and precint.
+     *
+     * @param [type] $recinto
+     * @param [type] $servicio
+     * @param [type] $especialista
+     * @param Request $request
+     * @return void
+     */
+    public function horarioServicios($recinto, $servicio, $especialista, Request $request)
+    {
+        $horarioServicio = Horarios_servicio::where('id_recinto', $recinto)->where('id_especialista', $especialista)
+            ->where('id_servicio', $servicio)->get(); //Revisar si existe horario para el especialista en el recinto y servicio
+
+        $horasOcupadas = array();
+
+        if (!$horarioServicio->isEmpty()) { //Si hay horario se inserta en un array
+            foreach ($horarioServicio as $horario) {
+                array_push($horasOcupadas,  $horario);
+            }
         }
- //////////////////////////FIN IF PRUEBA //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-    //return $x;
-}
 
+        $xD = $horasOcupadas;
 
-/**
- * Gets the 'horario_servicio' from a chosen 'recinto', 'especialista' and 'servicio', to know if 
- * the specialist has a horary for the determined service and precint.
- *
- * @param [type] $recinto
- * @param [type] $servicio
- * @param [type] $especialista
- * @param Request $request
- * @return void
- */
-public function horarioServicios($recinto, $servicio, $especialista, Request $request){
-    $horarioServicio = Horarios_servicio::where('id_recinto', $recinto)->where('id_especialista', $especialista)
-    ->where('id_servicio', $servicio)->get();//Revisar si existe horario para el especialista en el recinto y servicio
-    
-    $horasOcupadas = array();
-
-    if(!$horarioServicio->isEmpty()) {//Si hay horario se inserta en un array
-        foreach ($horarioServicio as $horario) {
-            array_push($horasOcupadas,  $horario);
-        }
+        return json_encode(["horario" => $xD]);
     }
 
-    $xD = $horasOcupadas;
-    
-    return json_encode(["horario"=>$xD]);
-}
-
-/**
- * Gets the 'horarioServicio' for the 'recinto' and 'servicio' given, assumming the
- * user loggedLOGGED id is from one 'especialista'
- *
- * @param [type] $recinto
- * @param [type] $servicio
- * @param Request $request
- * @return void
- */
-public function horarioServiciosEspecialista($recinto, $servicio, Request $request){
-    $name = Auth::user()->id;
-    	$especialista = DB::table('especialistas')->where('id_user', $name)
+    /**
+     * Gets the 'horarioServicio' for the 'recinto' and 'servicio' given, assumming the
+     * user loggedLOGGED id is from one 'especialista'
+     *
+     * @param [type] $recinto
+     * @param [type] $servicio
+     * @param Request $request
+     * @return void
+     */
+    public function horarioServiciosEspecialista($recinto, $servicio, Request $request)
+    {
+        $name = Auth::user()->id;
+        $especialista = DB::table('especialistas')->where('id_user', $name)
             ->select('id')->get();
-		$id = $especialista->first()->id;
+        $id = $especialista->first()->id;
 
-    $horarioServicio = Horarios_servicio::where('id_recinto', $recinto)->where('id_especialista',  $id)
-    ->where('id_servicio', $servicio)->get();//citas en la fecha elegida
-    
-    $horasOcupadas = array();
+        $horarioServicio = Horarios_servicio::where('id_recinto', $recinto)->where('id_especialista',  $id)
+            ->where('id_servicio', $servicio)->get(); //citas en la fecha elegida
 
-    if(!$horarioServicio->isEmpty()) {//citas existentes de la fecha elegidas
-        foreach ($horarioServicio as $horario) {
-            array_push($horasOcupadas,  $horario);
+        $horasOcupadas = array();
+
+        if (!$horarioServicio->isEmpty()) { //citas existentes de la fecha elegidas
+            foreach ($horarioServicio as $horario) {
+                array_push($horasOcupadas,  $horario);
+            }
         }
+
+        $xD = $horasOcupadas;
+
+        return json_encode(["horario" => $xD]);
     }
 
-    $xD = $horasOcupadas;
-    
-    return json_encode(["horario"=>$xD]);
-}
+    /**
+     * Gets ALL ACTIVE 'citas', ordering by their date.
+     *
+     * @return void
+     */
+    public function cargarCitas()
+    {
 
-/**
- * Gets ALL ACTIVE 'citas', ordering by their date.
- *
- * @return void
- */
-public function cargarCitas() {
-
-    $citas=DB::table('citas')->where('active_flag', '=', 1)->orderBy('fecha_cita','desc')->get();
-    if ($citas == null || $citas->isEmpty()) {
-        Flash::message("No hay citas para mostrar");
+        $citas = DB::table('citas')->where('active_flag', '=', 1)->orderBy('fecha_cita', 'desc')->get();
+        if ($citas == null || $citas->isEmpty()) {
+            Flash::message("No hay citas para mostrar");
+        }
+        //return $citas;
+        return json_encode(["citas" => $citas]);
     }
-    //return $citas;
-    return json_encode(["citas"=>$citas]);
-}
 
-/**
- * Gets the day and the information about the horary of a determined
- * 'especialista' at certain 'recinto' and 'servicio'
- *
- * @param [type] $dropRecintos
- * @param [type] $dropServicios
- * @param [type] $dropEspecialista
- * @return void
- */
-    public function mostrarHorarioEsp($dropRecintos, $dropServicios, $dropEspecialista){
+    /**
+     * Gets the day and the information about the horary of a determined
+     * 'especialista' at certain 'recinto' and 'servicio'
+     *
+     * @param [type] $dropRecintos
+     * @param [type] $dropServicios
+     * @param [type] $dropEspecialista
+     * @return void
+     */
+    public function mostrarHorarioEsp($dropRecintos, $dropServicios, $dropEspecialista)
+    {
 
         //$horarios_servicios_especialista = Horarios_servicio::where('id_especialista', $dropEspecialista)->where('id_servicio', $dropServicios)
         //->where('id_recinto', $dropRecintos)->where('active_flag', 1)->get();
 
         $horarios_servicios_especialista = DB::table('horarios_servicios')->where('id_especialista', $dropEspecialista)
-        ->where('id_servicio', $dropServicios)->where('id_recinto', $dropRecintos)
-		->join('dia_horario_servicios', 'horarios_servicios.id_dia', '=', 'dia_horario_servicios.id')
+            ->where('id_servicio', $dropServicios)->where('id_recinto', $dropRecintos)
+            ->join('dia_horario_servicios', 'horarios_servicios.id_dia', '=', 'dia_horario_servicios.id')
             ->orderBy('horarios_servicios.id_dia', 'asc')->get();
-            
-            
-        return json_encode(["mostrarHorarioEsp"=>$horarios_servicios_especialista]);
+
+
+        return json_encode(["mostrarHorarioEsp" => $horarios_servicios_especialista]);
     }
 }
