@@ -99,7 +99,8 @@
 	</div>
     <footer class="main-footer">
   	<div class="text-center main-footer">
-	  <a style="font-size:1em; color:#30A8D8;"><strong>Servicio de Salud</strong></a><img style="margin-top: 4px;" class="margin-logo" src="{{asset('Imagenes/logo-so-blc.png')}}" >
+		<img style="margin-top: 4px;" class="margin-logo" src="{{asset('Imagenes/logo-so-blc.png')}}" >
+		<img style="margin-top: 4px; width:7.5em; height:4em;" class="margin-logo" src="{{asset('Imagenes/cve_os_logo1.png')}}">
   	</div>
 	</footer>
 

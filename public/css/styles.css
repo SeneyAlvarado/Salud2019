@@ -171,6 +171,7 @@ div.logo-ucr-3 {
   -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   margin-left: 0px;
+  height: 5em;
 }
 
 @media (max-width: 767px) {
