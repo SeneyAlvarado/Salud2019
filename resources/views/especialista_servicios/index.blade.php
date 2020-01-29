@@ -31,7 +31,8 @@
             </div>
             <div style="margin-bottom: 15px;" class="col-md-3"><select id="dropEspecialistas"
                     class="form-control"></select></div>
-            <div class="col-md-3" style="position: relative; bottom: 25px;"><label for="max_citas_diarias">Máximo de
+            <div class="col-md-3 fix_citas_diarias"><label
+                    for="max_citas_diarias">Máximo de
                     citas diarias</label> <a href="#"><span class="glyphicon glyphicon-question-sign"
                         data-toggle="tooltip" data-original-title="Máximo de citas diarias para el servicio. 
                         Si es '0', la cantidad de citas para el servicio es indefinida"></span></a>
@@ -40,7 +41,31 @@
                     onkeyup="max_citas_number();"></div>
         </div>
 
-        <div class="row">
+        <style>
+            /* On screens that are 992px wide or less, adjust max citas field */
+            @media screen and (max-width: 992px) {
+                .fix_citas_diarias {
+                    position: relative !important;
+                    bottom: 0px !important;
+                }
+                .boton_vincular{
+                    position: relative !important;
+                    top: 10px !important;
+                }
+            }
+            /* On screens that are 992px wide or more, adjust max citas field */
+            @media screen and (min-width: 992px) {
+                .fix_citas_diarias {
+                    position: relative !important;
+                    bottom: 25px !important;
+                }
+                .boton_vincular{
+                    position: relative !important;
+                    bottom: 0px !important;
+                }
+            }
+        </style>
+        <div class="row boton_vincular">
             <div class="col-md-offset-5 col-md-1">
                 <a class="margin-button-agregar btn btn-success mobile" onclick="vincular()">Vincular</a>
             </div>
