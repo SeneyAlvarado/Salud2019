@@ -365,15 +365,15 @@ function horario_Recinto_Serv_Esp() {
                         textoHorario += diaHorario.dia + ": ";
 
                         if (diaHorario.disponibilidad_manana == "1") {
-                            textoHorario += "Mañana"
+                            textoHorario += "8:00-12:00"
                             var servicioDia = true;
                         }
                         if (diaHorario.disponibilidad_tarde == "1") {
                             if (servicioDia) {
-                                textoHorario += " y tarde"
+                                textoHorario += " y 13:00-17:00"
                                 var servicioDia = true;
                             } else {
-                                textoHorario += "Tarde"
+                                textoHorario += "13:00-17:00"
                                 var servicioDia = true;
                             }
                         }
@@ -384,6 +384,9 @@ function horario_Recinto_Serv_Esp() {
                         textoHorario += "\n";
                         var servicioDia = false;
                     });
+                    textoHorario += "\n\nEste servicio solo permite citas vía web en la tarde (de 13:00 a 17:00).";
+                    textoHorario += "\nSi desea agendar una cita en otro horario, puede apersonarse \nal Servicio de Salud o llamar a los teléfonos:";
+                    textoHorario+= "\n    • 2511-7193 \n    • 2511-9013";
                     alert(textoHorario);
                 } else {
                     alert("Ha habido un error verificando el horario del especialista. Si este persiste comuníquese" +

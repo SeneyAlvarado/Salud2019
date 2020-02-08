@@ -77,11 +77,18 @@ function extraerEspecialistas() {
 
 function vincular() {
         if (validarInputs()) {
-                var servicio = $('#dropServicios').val();
-                var recinto = $('#dropRecintos').val();
-                var especialista = $('#dropEspecialistas').val();
-                var max_citas = $('#max_citas_diarias').val();
-                window.location.replace("/vincularEspecialista/" + servicio + "/" + recinto + "/" + especialista + "/" + max_citas);
+                if (($.trim($('#max_citas_diarias').val()).length === 0 )) {//Si max_citas_diarias es vacío
+                        
+                        alert("Digíte un número válido en máximo de citas diarias");
+                        return false;
+                        
+                } else {//si max_citas_diarias NO es vacío
+                        var servicio = $('#dropServicios').val();
+                        var recinto = $('#dropRecintos').val();
+                        var especialista = $('#dropEspecialistas').val();
+                        var max_citas = $('#max_citas_diarias').val();
+                        window.location.replace("/vincularEspecialista/" + servicio + "/" + recinto + "/" + especialista + "/" + max_citas);
+                }
         }
 }
 
@@ -154,7 +161,7 @@ function prepareTooltip() {
 
 function max_citas_number() {
         var max_citas = $('#max_citas_diarias').val();
-        if(max_citas.length == 2 && max_citas.charAt(0) == "0") {
+        if (max_citas.length == 2 && max_citas.charAt(0) == "0") {
                 $('#max_citas_diarias').val(max_citas.charAt(1));
         }
         if (isNaN(max_citas) || max_citas.charAt(1) == ".") {

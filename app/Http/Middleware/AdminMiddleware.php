@@ -31,7 +31,7 @@ class AdminMiddleware
             Session::flash('message_type', 'negative');
             Session::flash('message_icon', 'hide');
             Session::flash('message_header', 'Failure');
-            Session::flash('info', 'Debe iniciarssss sesión');
+            Session::flash('info', 'Debe iniciar sesión');
             return redirect('/');
         }
         return $next($request);

@@ -15,12 +15,40 @@ Route::get('/log',function () {//No tocar esta ruta, cada que laravel hace algo 
     return view('auth/login');
 });
 
-Route::get('/',function () {
+
+
+
+Route::get('/', function () {
+    if (Auth::check()) {
+        $tipo = Auth::user()->tipo;
+            if($tipo == 4) {
+                return redirect('paciente');
+            } else {
+                if($tipo == 3){
+                return redirect('asistente');
+                } else{
+                    if($tipo == 2){
+                return redirect()->route('Especialista.index');
+                    } else {
+                        if($tipo == 1){
+                return redirect('admin');
+                    }
+                }
+              }
+            }
+    } else {
+        return view('auth.login');
+    }
+});
+
+
+//ruta original de /, respaldo para nuevas pruebas con sesión
+/*Route::get('/',function () {
     if(Auth::check()) {
         auth()->logout();
     }
     return view('auth/login');
-});//->middleware('auth.basic');
+});//->middleware('auth.basic');*/
 
 
 //---------------------------------------

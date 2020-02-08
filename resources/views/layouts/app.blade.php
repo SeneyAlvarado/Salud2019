@@ -89,8 +89,7 @@
 <footer class="main-footer">
     <div class="text-center main-footer">
         <img style="margin-top: 4px;" class="margin-logo" src="{{asset('Imagenes/logo-so-blc.png')}}">
-		<img style="margin-top: 4px; width:7.5em; height:4em;" class="margin-logo" src="{{asset('Imagenes/cve_os_logo1.png')}}">
-    </div>
+        <img style="margin-top: 4px; width:8em; height:4.5em;" class="margin-logo" src="{{asset('Imagenes/cve_ss_logo.png')}}">    </div>
 </footer>
 
 </html>
