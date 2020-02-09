@@ -501,3 +501,18 @@ Route::get('contrasennaEspecialista', function() {
 
 //Mostrar horario del servicio elegido según recinto y esp
 Route::get('/mostrarHorarioEsp/{dropRecintos}/{dropServicios}/{dropEspecialistas}', 'AjaxController@mostrarHorarioEsp')->middleware('paciente');
+
+
+//ruta error handling
+Route::get('/error', function() {
+    return view('errorHandler');
+});
+
+
+//ruta logout e inicio después de error
+Route::get('/errorInicio', function() {
+    if(Auth::check()) {
+        auth()->logout();
+    } 
+    return redirect('/'); 
+});

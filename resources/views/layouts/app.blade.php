@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/paneles.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('css/menuPrincipal.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="icon" src="{{asset('Imagenes/icono_pestanna.png')}}" type="image/png">
@@ -36,23 +37,24 @@
 
                     <!-- Branding Image -->
                     <div class="logo-nombre">
-                        <img class="img-responsive logo-nombre" style="margin-top: 10px;"
-                            src="{{asset('Imagenes/logo_nombre_ucr.png')}}">
+                        <a href="{{ url('/') }}"><img class="img-responsive logo-nombre" style="margin-top: 10px;"
+                            src="{{asset('Imagenes/logo_nombre_ucr.png')}}"></a>
                     </div>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @guest
-                        <li><a style="color: #FFFFFF; " href="{{ route('login') }}">Ingresar</a></li>
-                        <li><a style="color: #FFFFFF" href="{{ route('register') }}">Registrarse</a></li>
+                        <li><a style="color: #FFFFFF; text-align: center" href="{{ route('login') }}">Ingresar
+                                <span class="glyphicon glyphicon-log-in" style="margin-left: 2px;"></a></li>
+                        <li><a style="color: #FFFFFF; text-align: center" href="{{ route('register') }}">Registrarse<span
+                            class="glyphicon glyphicon-user"  style="margin-left: 5px;"></a>
+                        </li>
                         @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -89,7 +91,8 @@
 <footer class="main-footer">
     <div class="text-center main-footer">
         <img style="margin-top: 4px;" class="margin-logo" src="{{asset('Imagenes/logo-so-blc.png')}}">
-        <img style="margin-top: 4px; width:8em; height:4.5em;" class="margin-logo" src="{{asset('Imagenes/cve_ss_logo.png')}}">    </div>
+        <img style="margin-top: 4px; width:8em; height:4.5em;" class="margin-logo"
+            src="{{asset('Imagenes/cve_ss_logo.png')}}"> </div>
 </footer>
 
 </html>

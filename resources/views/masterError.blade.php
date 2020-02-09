@@ -49,14 +49,14 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<div><img class="img-responsive" style="margin-top: 10px; margin-left: 80px;" class=""
-						src="{{asset('Imagenes/logo_nombre_ucr.png')}}"></div>
+				<div><a href="{{ url('/errorInicio') }}"><img class="img-responsive" style="margin-top: 10px; margin-left: 80px;" class=""
+						src="{{asset('Imagenes/logo_nombre_ucr.png')}}"></a></div>
 			</div>
 
 			<ul class="nav navbar-nav navbar-right hide-button">
 				<li>
 					<!--data-toggle="dropdown"-->
-					<a href="{{ url('/') }}" class="dropdown-toggle logout-button" style="color:white">
+					<a href="{{ url('/errorInicio') }}" class="dropdown-toggle logout-button" style="color:white">
 						Inicio&nbsp<span class="glyphicon glyphicon-log-out" style="color:white"></span> 
 					</a>
 				</li>
@@ -74,26 +74,27 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a style="height: 50px" class="border-a active hide-title tittle-mobile" href="admin"><img
+			<a style="height: 50px" class="border-a active hide-title tittle-mobile" href="{{ url('/errorInicio') }}"><img
 					style="display: block; margin-left: auto; margin-right: auto;"
 					class="img-responsive center logo-nombre" height="20" width="250"
 					src="{{asset('Imagenes/logo_nombre_ucr.png')}}"></a>
 		</div>
 
 		<div id="myNavbar" class="collapse">
-			<a class="border-a hide-button-exit" href="{{ url('/') }}">Inicio<span
+			<a class="border-a hide-button-exit" href="{{ url('/errorInicio') }}">Inicio<span
 					class="glyphicon glyphicon-log-out right-aling-glyphicon-s"></a>
 		</div>
 	</div>
 
 	<div class="panel-heading">
-		<div class="content w3-container">
-
-			@yield('contenido_error')
-			<div class="row center">
-				<div class="">
-					@include('flash::message')
+		<div class="w3-container" style="margin-top: 4em;">
+			<div class="row center" style="text-align: center;">
+				<div class="col-md-10 col-md-offset-1" style="text-align: center; font-size: 2em;">
+					@yield('contenido_error')
 				</div>
+				<img class="img-responsive" alt="¡ERROR! :("
+					style="display: block; margin-left: auto; margin-right: auto; height: 25em; width: 25em;"
+					src="{{asset('Imagenes/error_robot.png')}}">
 			</div>
 		</div>
 	</div>
@@ -107,7 +108,6 @@
 		</div>
 	</footer>
 
-	<script src="{{asset('js/menus_dinamicos.js')}}"></script>
 	<script src="{{asset('js/bootstrap.min.js')}}"></script>
 	<!-- AdminLTE App -->
 	<script src="{{asset('js/app.min.js')}}"></script>
