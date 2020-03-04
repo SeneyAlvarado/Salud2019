@@ -449,10 +449,9 @@ private function horasLibres($arrayOcupadas) {
             "15:20", "15:40", "16:00", "16:20", "16:40"
         );
 
-        $fechaCitas = Cita::where('estado_cita_id', '!=', 3)->where('estado_cita_id', '!=', 4)->where('servicio_id', $dropServicios)
-            ->where('especialista_id', $dropEspecialistas)->where('recinto_id', $dropRecintos)->whereDate('fecha_cita', $fechaElegidaCarbon->toDateString())
-            ->get(); //citas en la fecha elegida
-
+        $fechaCitas = Cita::where('estado_cita_id', '!=', 3)->where('estado_cita_id', '!=', 4)->where('especialista_id', $dropEspecialistas)
+        ->whereDate('fecha_cita', $fechaElegidaCarbon->toDateString())->get(); //citas en la fecha elegida con el especialista elegido
+       
         //return $fechaCitas;
         //para comparara en whereDate() se le manda el atributo de BD y un string.
 
