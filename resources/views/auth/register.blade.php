@@ -53,15 +53,15 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
-                            <label for="cedula" class="col-md-4 control-label">Cédula</label>
+                        <div class="form-group{{ $errors->has('cedula_paciente') ? ' has-error' : '' }}">
+                            <label for="cedula_paciente" class="col-md-4 control-label">Cédula</label>
 
                             <div class="col-md-6">
-                                <input placeholder="Cédula con ceros y sin espacios, ej: 201230456" id="cedula" type="text" class="form-control" name="cedula" value="{{ old('cedula') }}" required autofocus>
+                                <input placeholder="Cédula con ceros y sin espacios, ej: 201230456" id="cedula_paciente" type="text" class="form-control" name="cedula_paciente" value="{{ old('cedula_paciente') }}" required autofocus>
 
-                                @if ($errors->has('cedula'))
+                                @if ($errors->has('cedula_paciente'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('cedula') }}</strong>
+                                        <strong>{{ $errors->first('cedula_paciente') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -84,7 +84,7 @@
                         <div class="form-group{{ $errors->has('telefono') ? ' has-error' : '' }}">
                                 <label for="telefono" class="col-md-4 control-label">Teléfono</label>
                             <div class="col-md-6">
-                                <input id="telefono" placeholder="Teléfono" type="text" class="form-control" name="telefono"  size="8" maxlength="8" pattern="^[0-9]{8}" value="{{ old('telefono') }}" required title="No se permiten letras en este campo/Debe contener al menos 8 dígitos">
+                                <input id="telefono" placeholder="Teléfono" type="text" class="form-control" name="telefono"  size="8" maxlength="12" pattern="^[0-9]{8,12}" value="{{ old('telefono') }}" required title="No se permiten letras en este campo/Debe contener entre 8 y 12 dígitos.">
                                 @if ($errors->has('telefono'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('telefono') }}</strong>
@@ -109,10 +109,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirmar Contraseña</label>
+                            <label for="password_confirmation" class="col-md-4 control-label">Confirmar Contraseña</label>
 
                             <div class="col-md-6">
-                                <input minlength="6" id="password-confirm" type="password" placeholder="Confirmar contraseña" class="form-control" name="password_confirmation" required minlength="6">
+                                <input minlength="6" id="password_confirmation" type="password" placeholder="Confirmar contraseña" class="form-control" name="password_confirmation" required minlength="6">
                             </div>
                         </div>
 

@@ -16,7 +16,7 @@ class CreateTelefonosTable extends Migration {
             $table->increments('id');
 			$table->integer('paciente_id')->unsigned();
 			$table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
-            $table->integer('telefono');
+            $table->string('telefono', 12);
             $table->boolean('active_flag');
         });
 

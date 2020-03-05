@@ -56,11 +56,16 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+
+        /*Para los campos que no tienen mensaje, en resources/lang/en/validation
+         se les hizo un mensaje custom*/
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'telefono'  => 'required|digits_between:8,12',
+            'cedula_paciente' => 'required|string|max:255|unique:pacientes'
         ]);
     }
 
@@ -78,26 +83,13 @@ class RegisterController extends Controller
      */
 
     public function register(Request $request) {
-        $contrasena = $request->input('password');
-        $conrasenaConfirmada = $request->input("password_confirmation");
-        if ($contrasena != $conrasenaConfirmada) {//confirm that the passwords match
-            # code...
-            return back()->withErrors(['password' => 'Las contraseñas no coinciden']);
-        }
+        
+        //Esto revisa si la creación por defecto de usuarios está activada o desactivada.
+        $active_flag = Cuentas_activa::orderBy('id')->first()->cuentas_activas;
+
+        /*Esto valida casi todo con el método de arriba*/
         $this->validator($request->all())->validate();
 
-        $active_flag = Cuentas_activa::orderBy('id')->first()->cuentas_activas;
-        $paciente = Paciente::where('cedula_paciente', $request->cedula)->get();
-        if(!$paciente->isEmpty()) { //Confirm that there is no patient with the id inserted.
-            return back()->withErrors(['cedula' => trans('Ya existe un paciente con la cédula indicada')]);
-            return redirect('/register');
-        }
-
-        $telefono = $request->input("telefono");
-        if($telefono == "" || strlen($telefono) < 4) { //validate the phone number format
-			return back()->withErrors(['telefono' => trans('Digite un teléfono válido')]);
-            return redirect('/register');
-        }
     
         $user = User::create([
             'name' =>  $request->name,
@@ -110,7 +102,7 @@ class RegisterController extends Controller
 
         $paciente = Paciente::create([
             'id_user' => $user->id,
-            'cedula_paciente' => $request->cedula,
+            'cedula_paciente' => $request->cedula_paciente,
             'nombre' => $request->name,
             'primer_apellido_paciente' => $request->lastName,
             'segundo_apellido_paciente' => $request->lastName2,
@@ -118,6 +110,8 @@ class RegisterController extends Controller
             'active_flag' => $active_flag,
         ]); //Create a new patient in pacientes table.
 
+
+                $telefono = $request->input("telefono");
                 $telefonoModel = new Telefono();
 				$telefonoModel->paciente_id = $paciente->id;
 				$telefonoModel->active_flag = 1;

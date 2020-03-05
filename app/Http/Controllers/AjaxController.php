@@ -56,7 +56,7 @@ class AjaxController extends Controller
     {
         //logout user y mandar mensaje bonito :3
         auth()->logout();
-        return redirect('login')->with('success', 'Su cuenta ha sido creada exitosamente');
+        return redirect('/')->with('success', 'Su cuenta ha sido creada exitosamente');
     }
 
     /**

@@ -49,16 +49,24 @@ class Handler extends ExceptionHandler
  public function render($request, Exception $e)
  {
 
-    //return parent::render($request, $e);
+    return parent::render($request, $e);
   $errorRoute = '/error';
 
   if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-   flash('¡La página a la que ha intentado acceder no existe o no es accesible en este momento!');
+    return response()->view('errors.404', [], 404);
+    /*Session::flash('message', '¡La página a la que ha intentado acceder no existe o no es accesible en este momento!'); 
+   flash('¡La página a la que ha intentado acceder no existe o no es accesible en este momento!');*/
    return redirect($errorRoute);
 
   } elseif ($e instanceof \Illuminate\Auth\AuthenticationException) {
    flash('¡Ha ocurrido un error con la sesión!');
    return redirect($errorRoute);
+
+  } elseif ($e instanceof \Swift_TransportException) {
+    flash('¡Ha ocurrido un error con el envío de un corrreo electrónico!'  .
+    ' Si este persiste contacte al Servicio de Salud');
+    return redirect($errorRoute);
+ 
 
   } elseif ($e instanceof \UnexpectedValueException) {
    flash('¡Ha ocurrido un error con un valor no válido !' .

@@ -100,8 +100,22 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'cedula_paciente' => [
+            'unique' => 'La cédula digitada ya existe.',
+            'required' => 'Debe digitar su cédula.',
+            'string' => 'La cédula digitada debe ser válida.',
+        ],
+
+        'password' => [
+            'required' => 'Debe digitar una contraseña',
+            'string' => 'La contraseña digitada debe ser válida.',
+            'min' => 'La contraseña digitada debe tener al menos :min caracteres',
+            'confirmed' => 'Las contraseñas no coinciden.'
+        ],
+
+        'telefono' => [
+            'required' => 'Debe digitar un teléfono',
+            'digits_between' => 'El teléfono debe tener entre :min y :max dígitos.',
         ],
     ],
 
