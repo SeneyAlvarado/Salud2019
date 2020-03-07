@@ -336,7 +336,7 @@ class CitaControllerEspecialista extends Controller
 				Session::flash('message_type', 'negative');
 				Session::flash('message_icon', 'hide');
 				Session::flash('message_header', 'Success');
-				Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' reservada existosamente');//shows appointment message successfully reserved
+				Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' reservada exitosamente');//shows appointment message successfully reserved
 
 				return redirect()->route('Especialista.index');
 				}
@@ -413,7 +413,7 @@ class CitaControllerEspecialista extends Controller
 				Session::flash('message_type', 'negative');
 				Session::flash('message_icon', 'hide');
 				Session::flash('message_header', 'Success');
-				Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' confirmada existosamente');//shows appointment message successfully confirmed
+				Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' confirmada exitosamente');//shows appointment message successfully confirmed
 				
 				return back();
 			}
@@ -495,7 +495,7 @@ class CitaControllerEspecialista extends Controller
 		Session::flash('message_type', 'negative');
 		Session::flash('message_icon', 'hide');
 		Session::flash('message_header', 'Failure');
-		Session::flash('error', 'Cita para el ' . $fecha . ' a las ' . $hora . ' cancelada existosamente');
+		Session::flash('error', 'Cita para el ' . $fecha . ' a las ' . $hora . ' cancelada exitosamente');
 
 		return back();
 	}

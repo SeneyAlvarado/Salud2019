@@ -409,7 +409,7 @@ class CitaControllerAsistente extends Controller
 				 Session::flash('message_type', 'negative');
 				 Session::flash('message_icon', 'hide');
 				 Session::flash('message_header', 'Success');
-				 Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $horaCita . ' reservada existosamente'); //shows appointment message successfully reserved
+				 Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $horaCita . ' reservada exitosamente'); //shows appointment message successfully reserved
 				if(Auth::user()->tipo == 3) { //Check if it is an assistant, return the assistant view
 					return redirect()->route('asistente.index');
 				}
@@ -612,7 +612,7 @@ class CitaControllerAsistente extends Controller
 				 Session::flash('message_type', 'negative');
 				 Session::flash('message_icon', 'hide');
 				 Session::flash('message_header', 'Success');
-				 Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' reservada existosamente');//shows appointment message successfully reserved
+				 Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $hora . ' reservada exitosamente');//shows appointment message successfully reserved
 
 				 return redirect()->route('asistente.index');
 				 }

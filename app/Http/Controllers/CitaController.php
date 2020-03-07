@@ -186,7 +186,7 @@ class CitaController extends Controller
 		Session::flash('message_type', 'negative');
 		Session::flash('message_icon', 'hide');
 		Session::flash('message_header', 'Success');
-		Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $horaCita . ' reservada existosamente');//shows appointment message successfully reserved
+		Session::flash('message', 'Cita para el ' . $fecha . ' a las ' . $horaCita . ' reservada exitosamente');//shows appointment message successfully reserved
 		return redirect()->route('citas.index');
 		}
 
@@ -274,7 +274,7 @@ class CitaController extends Controller
 		Session::flash('message_type', 'negative');
 		Session::flash('message_icon', 'hide');
 		Session::flash('message_header', 'Failure');
-		Session::flash('error', 'Cita para el ' . $fecha . ' a las ' . $hora . ' cancelada existosamente');
+		Session::flash('error', 'Cita para el ' . $fecha . ' a las ' . $hora . ' cancelada exitosamente');
 
 		return redirect()->route('citas.index');
 	}
