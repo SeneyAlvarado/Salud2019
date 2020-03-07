@@ -80,51 +80,68 @@ function especialistas(ID_Servicio, ID_Recinto) {
 
 
 $(document).ready(function () {
-    recintos();
-
-    $('#dropRecintos').change(function () {
-        ocultarHorario();
-        ocultarTablaCitasSugeridas();
-        var ID_Recinto = $('#dropRecintos').val();
-        if (ID_Recinto != 'defecto') {
-            servicios(ID_Recinto);
-            limpiarDrop("dropEspecialistas", "Especialista")
-        } else {
-            limpiarDrop("dropServicios", "Servicio")
-            limpiarDrop("dropEspecialistas", "Especialista")
-        }
-    })
-
-    $('#dropServicios').change(function () {
-        ocultarHorario();
-        ocultarTablaCitasSugeridas();
-        var ID_Servicio = $('#dropServicios').val();
-        var ID_Recinto = $('#dropRecintos').val();
-        if (ID_Servicio != 'defecto' && ID_Recinto != 'defecto') {
-            especialistas(ID_Servicio, ID_Recinto);
-        } else {
-            limpiarDrop("dropEspecialistas", "Especialista")
-        }
-    })
-
-    $('#dropEspecialistas').change(function () {
-        ocultarHorario();
-        ocultarTablaCitasSugeridas();
-
-        var ID_Servicio = $('#dropServicios').val();
-        var ID_Recinto = $('#dropRecintos').val();
-        var ID_Especialista = $('#dropEspecialistas').val();
-        if (ID_Servicio != 'defecto' && ID_Recinto != 'defecto' && ID_Especialista != 'defecto') {
-            horario_Recinto_Serv_Esp();
-        }
+    var hora_CR = $('#CR_Hour').val();
+    var minutos_CR = $('#CR_Minutes').val();
+    var diaSemana = $('#CR_Dayofweek').val().toUpperCase();
+    if (minutos_CR.length == 1) {//In case the hour is 8:02, transform 82 to 802
+        minutos_CR = "0" + minutos_CR.charAt(0);
     }
-    )
+    var horaActual_CR = hora_CR + "" + minutos_CR;
+    //alert(horaActual_CR);
+    if (horaActual_CR < 800 || diaSemana == "SATURDAY" || diaSemana == "SUNDAY") {
+        $('#mensajeHora').css("display", "block");
+        $('#dropRecintos').css("display", "none");
+        $('#dropEspecialistas').css("display", "none");
+        $('#dropServicios').css("display", "none");
+        $('#mostar-tabla').css("display", "none");
 
-    $('#datetimepicker5').click(function () {
-        ocultarHorario();
-        ocultarTablaCitasSugeridas();
+    } else {
+        recintos();
+
+        $('#dropRecintos').change(function () {
+            ocultarHorario();
+            ocultarTablaCitasSugeridas();
+            var ID_Recinto = $('#dropRecintos').val();
+            if (ID_Recinto != 'defecto') {
+                servicios(ID_Recinto);
+                limpiarDrop("dropEspecialistas", "Especialista")
+            } else {
+                limpiarDrop("dropServicios", "Servicio")
+                limpiarDrop("dropEspecialistas", "Especialista")
+            }
+        })
+
+        $('#dropServicios').change(function () {
+            ocultarHorario();
+            ocultarTablaCitasSugeridas();
+            var ID_Servicio = $('#dropServicios').val();
+            var ID_Recinto = $('#dropRecintos').val();
+            if (ID_Servicio != 'defecto' && ID_Recinto != 'defecto') {
+                especialistas(ID_Servicio, ID_Recinto);
+            } else {
+                limpiarDrop("dropEspecialistas", "Especialista")
+            }
+        })
+
+        $('#dropEspecialistas').change(function () {
+            ocultarHorario();
+            ocultarTablaCitasSugeridas();
+
+            var ID_Servicio = $('#dropServicios').val();
+            var ID_Recinto = $('#dropRecintos').val();
+            var ID_Especialista = $('#dropEspecialistas').val();
+            if (ID_Servicio != 'defecto' && ID_Recinto != 'defecto' && ID_Especialista != 'defecto') {
+                horario_Recinto_Serv_Esp();
+            }
+        }
+        )
+
+        $('#datetimepicker5').click(function () {
+            ocultarHorario();
+            ocultarTablaCitasSugeridas();
+        }
+        )
     }
-    )
 })
 
 function limpiarDrop(nombreDrop, nombreTexto) {
@@ -143,6 +160,7 @@ function revisarDisponibilidad() {
     //alert("Server:" + ($('#CR_Date').val()));
     var datepicked = $('#CR_Date').val();
     //alert(datepicked);
+    //alert($('#CR_Hour').val());
     //alert("Fecha elegida: " + datepicked);
     var dropRecintos = $('#dropRecintos').val();
     //alert(dropRecintos);
@@ -169,7 +187,7 @@ function revisarDisponibilidad() {
                 }
             }, error: function () {
                 alert("Ha habido un error verificando la existencia de citas. Si este persiste comuníquese" +
-                    " con el Servicio de Salud");
+                    " con el Servicio de Salud.");
             },
             timeout: 15000
         });
@@ -494,7 +512,7 @@ function horario_Recinto_Serv_Esp() {
                     });
                     textoHorario += "\n\nEste servicio solo permite citas vía web en la tarde (de 13:00 a 17:00).";
                     textoHorario += "\nSi desea agendar una cita en otro horario, puede apersonarse \nal Servicio de Salud o llamar a los teléfonos:";
-                    textoHorario+= "\n    • 2511-7193 \n    • 2511-9013";
+                    textoHorario += "\n    • 2511-7193 \n    • 2511-9013";
                     alert(textoHorario);
                 } else {
                     alert("Ha habido un error verificando el horario del especialista. Si este persiste comuníquese" +

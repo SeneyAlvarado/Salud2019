@@ -15,9 +15,21 @@
         <script src="{{asset('js/pruebaCombox.js')}}"></script>
 
         <!-- sdfghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-->
-        <input type="hidden" id="CR_Date" value="{{\Carbon\Carbon::now(new \DateTimeZone('America/Costa_Rica'))}}" />
-        <input type="hidden" id="CR_Date_formated"
-            value="{{\Carbon\Carbon::parse(\Carbon\Carbon::now(new \DateTimeZone('America/Costa_Rica')))->format('d/m/Y')}}" />
+
+        <input type="hidden" id="CR_Date" value="{{$cr_date  = \Carbon\Carbon::now('America/Costa_Rica')}}" />
+        <input type="hidden" id="CR_Date_formated" value="{{$cr_date->format('d/m/Y')}}" />
+        <input type="hidden" id="CR_Dayofweek" value="{{$cr_date->englishDayOfWeek}}" />
+        <input type="hidden" id="CR_Hour" value="{{$cr_date->hour}}" />
+        <input type="hidden" id="CR_Minutes" value="{{$cr_date->minute}}" />
+
+        <div id="mensajeHora" class="col-md-10 col-md-offset-1" style="text-align: center; font-size: 1.5em; display: none;">
+            <div class="marginbottom-sm margintop-sm flash alert alert-info ">
+                <span class="icon">
+                    <span class="fa fa-info-circle"></span>
+                </span>
+                Los espacios de cita se liberan de Lunes a Viernes a las 8:00 a.m, por favor espere hasta la hora indicada. </div>
+        </div>
+
 
 
         <!-- This div was the calendar for the patient to pick the date
