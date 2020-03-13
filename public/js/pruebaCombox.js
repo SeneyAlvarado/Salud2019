@@ -184,6 +184,7 @@ function revisarDisponibilidad() {
                     alert("El máximo de citas para el servicio seleccionado en la fecha elegida ha sido alcanzado.");
                 } else {
                     cargarFechasDisponibles(datos.horasOcupadas);
+                    disableMorning();//This disables ALL morning.
                 }
             }, error: function () {
                 alert("Ha habido un error verificando la existencia de citas. Si este persiste comuníquese" +
@@ -526,5 +527,17 @@ function horario_Recinto_Serv_Esp() {
             timeout: 15000
         });
     }
+}
+
+/**
+ * Este método deshabilita las citas en la MANAÑA para los PACIENTES, esto a solicitud del cliente.
+ */
+function disableMorning() {
+    var horasMañana = ["800", "820", "840", "900", "920", "940", "1000", "1020", "1040"
+        , "1100", "1120", "1140"];
+    horasMañana.forEach(function (entry) {
+        document.getElementById(entry).disabled = true;
+        document.getElementById(entry).style.backgroundColor = "#656161";
+    });
 }
 
